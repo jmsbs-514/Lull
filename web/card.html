@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Lull</title>
+<link rel="stylesheet" href="/card.css">
+</head>
+<body class="t-glow">
+  <div id="card">
+    <div class="cover-wrap">
+      <span class="cover-note">♪</span>
+      <img id="cover" alt="">
+    </div>
+
+    <div class="info">
+      <div class="top">
+        <div class="meta">
+          <div id="title">歌名</div>
+          <div id="artist">歌手</div>
+        </div>
+        <button class="ghost" id="home" aria-label="打开主页">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 10.6 12 4l8 6.6"/>
+            <path d="M6.2 9.6V19a1 1 0 0 0 1 1h3.4v-5h2.8v5H17a1 1 0 0 0 1-1V9.6"/>
+          </svg>
+        </button>
+        <button class="ghost" id="more" aria-label="更多">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="6" cy="12" r="1.35"/>
+            <circle cx="12" cy="12" r="1.35"/>
+            <circle cx="18" cy="12" r="1.35"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="seek" id="seek">
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <div class="times"><span id="cur">0:00</span><span id="dur">0:00</span></div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl" id="prev" aria-label="上一首">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 5.6v12.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M19 6.5v11a.7.7 0 0 1-1.1.6l-8-5.5a.75.75 0 0 1 0-1.2l8-5.5a.7.7 0 0 1 1.1.6Z" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="ctrl play" id="play" aria-label="播放或暂停">
+          <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 6.7v10.6a.8.8 0 0 0 1.2.7l8.2-5.3a.8.8 0 0 0 0-1.4L10.2 6a.8.8 0 0 0-1.2.7Z" fill="currentColor"/>
+          </svg>
+          <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="8" y="6" width="3" height="12" rx="1.3" fill="currentColor"/>
+            <rect x="13.5" y="6" width="3" height="12" rx="1.3" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="ctrl" id="next" aria-label="下一首">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 5.6v12.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M5 6.5v11a.7.7 0 0 0 1.1.6l8-5.5a.75.75 0 0 0 0-1.2l-8-5.5A.7.7 0 0 0 5 6.5Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="menu">
+      <button class="menu-back" id="mBack" aria-label="返回">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 6 8 12l6 6"/>
+        </svg>
+        <span>返回</span>
+      </button>
+      <button class="menu-row" id="mVisible">显示 / 隐藏歌词</button>
+      <button class="menu-row" id="mLock"><span id="mLockLabel">锁定（点击穿透）</span></button>
+      <button class="menu-row danger" id="mQuit">退出 Lull</button>
+    </div>
+  </div>
+  <script src="/color.js"></script>
+  <script src="/card.js"></script>
+</body>
+</html>

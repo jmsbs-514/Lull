@@ -1,0 +1,11 @@
+pywebview==6.2.1
+Pillow==13.0.0
+pystray==0.19.5
+requests==2.25.1
+winrt-runtime==3.2.1
+winrt-Windows.Media.Control==3.2.1
+winrt-Windows.Storage.Streams==3.2.1
+pycaw==20260927
+comtypes==1.4.17
+numpy==2.2.6
+soundcard==0.4.6

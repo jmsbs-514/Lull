@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+settings.json
+settings.json.tmp
+error.log
+startup.log
+_probe*
+*.png
+*.zip
+.env
+desktop.ini

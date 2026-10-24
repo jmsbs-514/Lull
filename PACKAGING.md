@@ -1,41 +1,52 @@
-﻿# 鎵撳寘璇存槑
+# 打包说明
 
-## 鐜
+## 环境
 
 - Windows 10/11 x64
 - Python 3.13
-- 椤圭洰渚濊禆宸插畨瑁咃細`pip install -r requirements.txt`
-- PyInstaller锛歚pip install pyinstaller`
+- 项目依赖已安装：`pip install -r requirements.txt`
+- PyInstaller：`pip install pyinstaller`
 
-## 鏋勫缓
+## 构建
 
 ```powershell
 cd C:\Users\jmsbs\Desktop\Lull
 python -m PyInstaller --noconfirm --clean Lull.spec
 ```
 
-浜х墿锛?
+产物：
+
 ```text
 dist\Lull\Lull.exe
 dist\Lull\_internal\
 ```
 
-杩欐槸 **onedir** 鐗堟湰锛屽繀椤讳繚鐣欐暣涓?`Lull` 鏂囦欢澶癸紱涓嶈鍙嫹 `Lull.exe`銆?
-## 鍏抽敭鐐?
-- 鍏ュ彛鏄?`launcher.py`锛屾棤鎺у埗鍙般€?- `web/` 浼氭墦杩?`_internal/web`锛屾湇鍔＄閫氳繃 `sys._MEIPASS` 璇诲彇銆?- 闊抽閲囬泦浠?`Lull.exe --audio-helper` 瀛愯繘绋嬭繍琛岋紝鍏ュ彛浼氬厛鍒嗘淳杩欎釜鍙傛暟锛?  涓嶄細鍒涘缓绐楀彛鎴栫敵璇峰崟瀹炰緥浜掓枼浣撱€?- `settings.json`銆乣startup.log`銆乣error.log` 鍐欏湪 exe 鍚岀洰褰曪紝鏂逛究渚挎惡浣跨敤銆?- WebView2 鐨?.NET DLL銆亀inrt銆乻oundcard銆乸ycaw銆乸ystray 鐢?`Lull.spec`
-  閲岀殑 `collect_all` 鏀惰繘鍘汇€?- 鍥炬爣锛歚assets/lull.ico`銆?
-## 鍙戝竷 zip
+这是 **onedir** 版本，必须保留整个 `Lull` 文件夹；不要只拷 `Lull.exe`。
+
+## 关键点
+
+- 入口是 `launcher.py`，无控制台。
+- `web/` 会打进 `_internal/web`，服务端通过 `sys._MEIPASS` 读取。
+- 音频采集以 `Lull.exe --audio-helper` 子进程运行，入口会先分派这个参数，
+  不会创建窗口或申请单实例互斥体。
+- `settings.json`、`startup.log`、`error.log` 写在 exe 同目录，方便便携使用。
+- WebView2 的 .NET DLL、winrt、soundcard、pycaw、pystray 由 `Lull.spec`
+  里的 `collect_all` 收进去。
+- 图标：`assets/lull.ico`。
+
+## 发布 zip
 
 ```powershell
 Remove-Item dist\Lull\settings.json, dist\Lull\startup.log, dist\Lull\error.log -ErrorAction SilentlyContinue
 Compress-Archive -Path dist\Lull\* -DestinationPath Lull-0.1.1-win64.zip -Force
 ```
 
-涓嶈鎶婁釜浜?`settings.json` 鎵撹繘鍙戝竷鍖呫€?
-## 宸查獙璇?
-- 鎵撳寘鐗堣兘鍚姩锛宍/api/debug` 杩斿洖姝ｅ父
-- 绐楀彛 804脳100
-- `audio_available=true`銆乣audio_spectrum=true`
-- 闊抽 helper 杩涚▼涓?`Lull.exe --audio-helper`
-- 鏃?`error.log`
+不要把个人 `settings.json` 打进发布包。
 
+## 已验证
+
+- 打包版能启动，`/api/debug` 返回正常
+- 窗口 804×100
+- `audio_available=true`、`audio_spectrum=true`
+- 音频 helper 进程为 `Lull.exe --audio-helper`
+- 无 `error.log`

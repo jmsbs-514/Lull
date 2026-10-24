@@ -47,6 +47,7 @@ WS_EX_LAYERED = 0x00080000
 WS_EX_TRANSPARENT = 0x00000020
 WS_EX_NOACTIVATE = 0x08000000
 WS_EX_TOOLWINDOW = 0x00000080
+WS_EX_APPWINDOW = 0x00040000
 WM_NCLBUTTONDOWN = 0x00A1
 HTCAPTION = 2
 SWP_NOSIZE = 0x0001
@@ -183,7 +184,9 @@ def card_position(width: int, height: int) -> tuple[int, int]:
 
 def set_toolwindow(hwnd: int) -> None:
     ex = user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
-    user32.SetWindowLongW(hwnd, GWL_EXSTYLE, ex | WS_EX_TOOLWINDOW)
+    # APPWINDOW 会强行保留任务栏按钮；必须和 TOOLWINDOW 一起清掉。
+    ex = (ex | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW
+    user32.SetWindowLongW(hwnd, GWL_EXSTYLE, ex)
     user32.SetWindowPos(hwnd, 0, 0, 0, 0, 0,
                         SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED)
 
@@ -266,6 +269,7 @@ def set_layer_mode(hwnd: int, locked: bool) -> None:
 def set_clickthrough(hwnd: int, enabled: bool) -> None:
     ex = user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
     ex |= WS_EX_TOOLWINDOW
+    ex &= ~WS_EX_APPWINDOW
     if enabled:
         ex |= WS_EX_TRANSPARENT | WS_EX_NOACTIVATE
     else:
@@ -689,6 +693,7 @@ def main() -> None:
         if not hwnd:
             return
         controller.panel_hwnd = hwnd
+        set_toolwindow(hwnd)
         r = wt.RECT()
         user32.GetWindowRect(ctypes.c_void_p(hwnd), ctypes.byref(r))
         w, h = r.right - r.left, r.bottom - r.top

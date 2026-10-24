@@ -15,6 +15,7 @@ import time
 
 CREATE_NO_WINDOW = 0x08000000
 HELPER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "audio_helper.py")
+FROZEN = bool(getattr(sys, "frozen", False))
 BAND_COUNT = 32
 
 
@@ -77,8 +78,10 @@ class AudioLevel(threading.Thread):
         while not self._stop:
             proc = None
             try:
+                cmd = ([sys.executable, "--audio-helper"] if FROZEN
+                       else [sys.executable, "-u", HELPER])
                 proc = subprocess.Popen(
-                    [sys.executable, "-u", HELPER],
+                    cmd,
                     stdin=subprocess.DEVNULL,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.DEVNULL,

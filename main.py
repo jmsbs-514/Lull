@@ -11,6 +11,7 @@
 import ctypes
 import ctypes.wintypes as wt
 import os
+import sys
 import threading
 import time
 import urllib.request
@@ -20,6 +21,10 @@ os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS",
 
 import webview
 from PIL import Image, ImageDraw
+
+from core.paths import app_dir
+
+APP_DIR = app_dir()
 
 from core.audio import AudioLevel
 from core.lyrics import LyricStore
@@ -108,7 +113,7 @@ def _startup_watchdog(controller) -> None:
     if controller.hwnd:
         return
     try:
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "error.log")
+        path = os.path.join(APP_DIR, "error.log")
         with open(path, "a", encoding="utf-8") as f:
             f.write(
                 f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] "
@@ -534,7 +539,7 @@ def make_tray_icon(accent: str | None = None) -> Image.Image:
 
 def _trace(msg: str) -> None:
     try:
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "startup.log")
+        path = os.path.join(APP_DIR, "startup.log")
         with open(path, "a", encoding="utf-8") as f:
             f.write(f"{time.strftime('%H:%M:%S')} {msg}\n")
     except Exception:
@@ -543,7 +548,7 @@ def _trace(msg: str) -> None:
 
 def main() -> None:
     try:
-        open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "startup.log"),
+        open(os.path.join(APP_DIR, "startup.log"),
              "w", encoding="utf-8").close()
     except Exception:
         pass
@@ -757,7 +762,7 @@ def run() -> None:
         main()
     except Exception:
         import traceback
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "error.log"),
+        with open(os.path.join(APP_DIR, "error.log"),
                   "a", encoding="utf-8") as f:
             f.write(traceback.format_exc() + "\n")
         raise

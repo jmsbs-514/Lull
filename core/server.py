@@ -12,9 +12,10 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
+from core.paths import resource_dir
 from core.settings import sanitize_patch
 
-WEB_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web")
+WEB_ROOT = os.path.join(resource_dir(), "web")
 
 
 class Handler(BaseHTTPRequestHandler):

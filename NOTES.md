@@ -582,6 +582,10 @@ lull/
 - [x] 律动条：5 种整行频谱 + 32 段真频谱 + 静音收缩 + 透明度 + 颜色，默认关闭
 - [x] 一键预设：夜航/纸上/留白/线，一次写样式、配色、律动和透明度
 - [x] 启动重试（6×0.4s）+ 30 秒看门狗，处理快速重启和 WebView2 卡死
+- [x] 17 项 Python 测试、四个 JS 语法通过
+- [x] GitHub 仓库 `jmsbs-514/Lull` 已接入
+- [x] PyInstaller onedir 打包：`dist\Lull\Lull.exe` + `_internal`
+- [x] 发布包 `Lull-0.1.0-win64.zip`（31.9 MB，onedir）
 - [x] 单实例、无控制台启动、异常写 `error.log`
 - [x] 切歌到无歌词歌曲时清空旧歌词、翻译/下一句开关正常生效
 - [x] 多播放器时优先选择正在播放的 SMTC 会话
@@ -602,8 +606,25 @@ lull/
 - [ ] 多显示器支持 / 高 DPI
 - [ ] 区域缩放的边缘吸附/最小尺寸提示
 - [ ] 开机自启
-- [ ] 打包成 exe（PyInstaller）——下一步
-- [ ] 开 GitHub 仓库
+- [ ] 单文件 exe / 安装器
+
+---
+
+## 打包（2026-10-24）
+
+- PyInstaller 6.22.3 + Python 3.13，onedir，`console=False`。
+- 入口 `launcher.py`；`core.paths` 负责开发/冻结路径：
+  - 设置和日志在 exe 同目录；
+  - `web/` 从 `sys._MEIPASS` 读取。
+- 音频采集不再 spawn `pythonw.exe core/audio_helper.py`，冻结后改成
+  `Lull.exe --audio-helper`；入口在导入 main 前分派该参数。
+- `Lull.spec` 用 `collect_all` 收 webview / winrt / soundcard / pycaw /
+  pystray / comtypes，`assets/lull.ico` 作为 exe 图标。
+- 产物：`dist\Lull\Lull.exe`（9.1 MB），整目录 73.3 MB；
+  发布 zip 31.9 MB，451 个条目。
+- 实测：打包版 `/api/debug` 正常，窗口 804×100，音频 helper 为
+  `Lull.exe --audio-helper`，`audio_available/spectrum=true`，无 error.log。
+- **没有做单文件**：WebView2 + 音频子进程用 onedir 更稳；单文件留作后续。
 
 ---
 

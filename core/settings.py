@@ -5,8 +5,11 @@ import math
 import os
 import re
 import threading
+import time
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from core.paths import app_dir
+
+ROOT = app_dir()
 PATH = os.path.join(ROOT, "settings.json")
 
 HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")

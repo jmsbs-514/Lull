@@ -63,3 +63,9 @@ py -3.13 -m venv .venv
 ```powershell
 .\.venv\Scripts\python.exe -m unittest -v test_backend test_core
 ```
+
+## 打包
+
+构建说明见 [PACKAGING.md](PACKAGING.md)。当前发布包是 onedir 版本，
+解压后运行 `Lull.exe`，需要保留同目录的 `_internal`。
+

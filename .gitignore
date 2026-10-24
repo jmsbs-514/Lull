@@ -11,3 +11,8 @@ _probe*
 *.zip
 .env
 desktop.ini
+
+build/
+dist/
+pyinstaller-install.log
+Lull-*.zip

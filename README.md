@@ -13,6 +13,17 @@
 
 网易云原版不向 Windows 上报媒体状态，因此需要 BetterNCM 和 InfLink-rs 将播放信息发布到 SMTC。
 
+> **使用前必读：用网易云必须先装插件。**
+> 只装 Lull 是不够的。没有 BetterNCM + InfLink-rs，Lull 在 Windows 里看不到网易云的媒体会话，
+> 表现就是完全没有歌词。
+>
+> 新版网易云设置里可能已经有“开启 SMTC”选项，但它通常只提供歌名/歌手/进度等基础信息；
+> Lull 的网易云歌词和翻译依赖 InfLink 提供的 `NCM-歌曲ID`。如果开了原生 SMTC 仍然读不到，
+> 先关掉它，再重启网易云，让 InfLink 发布会话。两个不要同时开。
+>
+> 其他播放器（Spotify 等）原生支持 SMTC，不需要这套插件。
+
+
 ## 安装
 
 ```powershell

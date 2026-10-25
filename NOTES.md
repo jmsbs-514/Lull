@@ -589,7 +589,7 @@ lull/
 - [x] 17 项 Python 测试、四个 JS 语法通过
 - [x] GitHub 仓库 `jmsbs-514/Lull` 已接入
 - [x] PyInstaller onedir 打包：`dist\Lull\Lull.exe` + `_internal`
-- [x] 发布包 `Lull-0.1.1-win64.zip`（31.9 MB，onedir）
+- [x] 发布包 `Lull-0.1.2-win64.zip`（31.9 MB，onedir）
 - [x] 单实例、无控制台启动、异常写 `error.log`
 - [x] 切歌到无歌词歌曲时清空旧歌词、翻译/下一句开关正常生效
 - [x] 多播放器时优先选择正在播放的 SMTC 会话
@@ -625,7 +625,7 @@ lull/
 - `Lull.spec` 用 `collect_all` 收 webview / winrt / soundcard / pycaw /
   pystray / comtypes，`assets/lull.ico` 作为 exe 图标。
 - 产物：`dist\Lull\Lull.exe`（9.1 MB），整目录 73.3 MB；
-  发布 zip 31.9 MB，451 个条目；v0.1.1 修掉任务栏/Alt+Tab 图标。
+  发布 zip 31.9 MB，451 个条目；v0.1.2 修掉任务栏/Alt+Tab 图标（清 APPWINDOW 后隐藏再显示）。
 - 实测：打包版 `/api/debug` 正常，窗口 804×100，音频 helper 为
   `Lull.exe --audio-helper`，`audio_available/spectrum=true`，无 error.log。
 - **没有做单文件**：WebView2 + 音频子进程用 onedir 更稳；单文件留作后续。

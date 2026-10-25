@@ -56,6 +56,8 @@ SWP_NOZORDER = 0x0004
 SWP_NOACTIVATE = 0x0010
 SWP_FRAMECHANGED = 0x0020
 LWA_COLORKEY = 0x00000001
+SW_HIDE = 0
+SW_SHOWNOACTIVATE = 4
 LWA_ALPHA = 0x00000002
 KEY_COLOR = 0x00000000
 EDIT_ALPHA = 132
@@ -677,6 +679,10 @@ def main() -> None:
             locked = bool(settings.snapshot().get("locked", True))
             set_clickthrough(hwnd, locked)
             set_layer_mode(hwnd, locked)
+            # 任务栏按钮是窗口首次显示时建的；清掉 APPWINDOW 后必须隐藏再显示，
+            # 让 Explorer 回收旧按钮。
+            user32.ShowWindow(ctypes.c_void_p(hwnd), SW_HIDE)
+            user32.ShowWindow(ctypes.c_void_p(hwnd), SW_SHOWNOACTIVATE)
             _trace("clickthrough ready")
         card_hwnd = find_window(CARD_TITLE)
         if card_hwnd:

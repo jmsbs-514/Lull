@@ -38,7 +38,7 @@ dist\Lull\_internal\
 
 ```powershell
 Remove-Item dist\Lull\settings.json, dist\Lull\startup.log, dist\Lull\error.log -ErrorAction SilentlyContinue
-Compress-Archive -Path dist\Lull\* -DestinationPath Lull-0.1.1-win64.zip -Force
+Compress-Archive -Path dist\Lull\* -DestinationPath Lull-0.1.2-win64.zip -Force
 ```
 
 不要把个人 `settings.json` 打进发布包。

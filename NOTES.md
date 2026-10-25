@@ -625,7 +625,7 @@ lull/
 - `Lull.spec` 用 `collect_all` 收 webview / winrt / soundcard / pycaw /
   pystray / comtypes，`assets/lull.ico` 作为 exe 图标。
 - 产物：`dist\Lull\Lull.exe`（9.1 MB），整目录 73.3 MB；
-  发布 zip 31.9 MB，451 个条目；v0.1.2 修掉任务栏/Alt+Tab 图标（清 APPWINDOW 后隐藏再显示）。
+  发布 zip 31.9 MB，451 个条目；v0.1.2 修掉任务栏/Alt+Tab 图标（清 APPWINDOW，并用 ITaskbarList.DeleteTab 持续清理）。
 - 实测：打包版 `/api/debug` 正常，窗口 804×100，音频 helper 为
   `Lull.exe --audio-helper`，`audio_available/spectrum=true`，无 error.log。
 - **没有做单文件**：WebView2 + 音频子进程用 onedir 更稳；单文件留作后续。

@@ -56,8 +56,6 @@ SWP_NOZORDER = 0x0004
 SWP_NOACTIVATE = 0x0010
 SWP_FRAMECHANGED = 0x0020
 LWA_COLORKEY = 0x00000001
-SW_HIDE = 0
-SW_SHOWNOACTIVATE = 4
 LWA_ALPHA = 0x00000002
 KEY_COLOR = 0x00000000
 EDIT_ALPHA = 132
@@ -184,6 +182,40 @@ def card_position(width: int, height: int) -> tuple[int, int]:
     return int(x), int(y)
 
 
+def delete_taskbar_tab(hwnd: int) -> None:
+    """WindowsForms 会通过 ITaskbarList.AddTab 注册按钮；清扩展样式不会撤销它。"""
+    try:
+        import comtypes
+        import comtypes.client
+        from comtypes import COMMETHOD, GUID, HRESULT
+
+        class ITaskbarList(comtypes.IUnknown):
+            _iid_ = GUID("{56FDF342-FD6D-11d0-958A-006097C9A090}")
+            _methods_ = [
+                COMMETHOD([], HRESULT, "HrInit"),
+                COMMETHOD([], HRESULT, "AddTab",
+                          (["in"], ctypes.c_void_p, "hwnd")),
+                COMMETHOD([], HRESULT, "DeleteTab",
+                          (["in"], ctypes.c_void_p, "hwnd")),
+                COMMETHOD([], HRESULT, "ActivateTab",
+                          (["in"], ctypes.c_void_p, "hwnd")),
+                COMMETHOD([], HRESULT, "SetActiveAlt",
+                          (["in"], ctypes.c_void_p, "hwnd")),
+            ]
+
+        comtypes.CoInitialize()
+        try:
+            taskbar = comtypes.client.CreateObject(
+                GUID("{56FDF344-FD6D-11d0-958A-006097C9A090}"),
+                interface=ITaskbarList)
+            taskbar.HrInit()
+            taskbar.DeleteTab(hwnd)
+        finally:
+            comtypes.CoUninitialize()
+    except Exception:
+        pass
+
+
 def set_toolwindow(hwnd: int) -> None:
     ex = user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
     # APPWINDOW 会强行保留任务栏按钮；必须和 TOOLWINDOW 一起清掉。
@@ -191,6 +223,7 @@ def set_toolwindow(hwnd: int) -> None:
     user32.SetWindowLongW(hwnd, GWL_EXSTYLE, ex)
     user32.SetWindowPos(hwnd, 0, 0, 0, 0, 0,
                         SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED)
+    delete_taskbar_tab(hwnd)
 
 
 def round_window(hwnd: int, width: int, height: int) -> None:
@@ -280,6 +313,17 @@ def set_clickthrough(hwnd: int, enabled: bool) -> None:
     user32.SetWindowLongW(hwnd, GWL_EXSTYLE, ex)
     user32.SetWindowPos(hwnd, 0, 0, 0, 0, 0,
                         SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED)
+    delete_taskbar_tab(hwnd)
+
+
+def watch_taskbar(controller) -> None:
+    """WinForms 会在窗口显示后重新 AddTab；持续把 Lull 自己的按钮删掉。"""
+    while True:
+        for hwnd in (controller.hwnd, controller.panel_hwnd,
+                     controller.card_hwnd):
+            if hwnd:
+                delete_taskbar_tab(hwnd)
+        time.sleep(1.0)
 
 
 class Controller:
@@ -666,6 +710,9 @@ def main() -> None:
     controller.card_window = card_window
     _trace("windows created")
 
+    threading.Thread(target=watch_taskbar, args=(controller,), daemon=True,
+                     name="taskbar").start()
+
     def apply_window_style():
         _trace("apply window style start")
         # WebView2 刚起来时改分层属性容易死锁，等页面稳定一点再动窗口样式。
@@ -679,10 +726,6 @@ def main() -> None:
             locked = bool(settings.snapshot().get("locked", True))
             set_clickthrough(hwnd, locked)
             set_layer_mode(hwnd, locked)
-            # 任务栏按钮是窗口首次显示时建的；清掉 APPWINDOW 后必须隐藏再显示，
-            # 让 Explorer 回收旧按钮。
-            user32.ShowWindow(ctypes.c_void_p(hwnd), SW_HIDE)
-            user32.ShowWindow(ctypes.c_void_p(hwnd), SW_SHOWNOACTIVATE)
             _trace("clickthrough ready")
         card_hwnd = find_window(CARD_TITLE)
         if card_hwnd:
